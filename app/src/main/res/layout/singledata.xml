@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardElevation="6dp"
+    app:cardCornerRadius="16dp"
+    app:cardUseCompatPadding="true"
+    android:padding="16dp"
+    app:cardPreventCornerOverlap="true"
+    android:backgroundTint="@color/white">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <!-- Week No Text with Edit & Delete Buttons -->
+        <LinearLayout
+            android:id="@+id/buttonContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="end"
+            android:layout_marginBottom="8dp">
+
+            <TextView
+                android:id="@+id/txtWeekNo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Week No: "
+                android:textSize="22sp"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                android:layout_weight="1"/>
+
+            <!-- Edit Button -->
+            <ImageButton
+                android:id="@+id/btnEdit"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@android:drawable/ic_menu_edit"
+                android:contentDescription="Edit"
+                android:padding="8dp"
+                android:layout_marginEnd="12dp"/>
+
+            <!-- Delete Button -->
+            <ImageButton
+                android:id="@+id/btnDelete"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@android:drawable/ic_menu_delete"
+                android:contentDescription="Delete"
+                android:padding="8dp"/>
+        </LinearLayout>
+
+        <!-- Day Text -->
+        <TextView
+            android:id="@+id/txtDay"
+            android:layout_below="@id/buttonContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Day: "
+            android:textSize="20sp"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            android:layout_marginBottom="8dp"/>
+
+        <!-- Breakfast Text -->
+        <TextView
+            android:id="@+id/txtBreakfast"
+            android:layout_below="@id/txtDay"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Breakfast: "
+            android:textSize="18sp"
+            android:textColor="@color/black"
+            android:layout_marginBottom="6dp"/>
+
+        <!-- Lunch Text -->
+        <TextView
+            android:id="@+id/txtLunch"
+            android:layout_below="@id/txtBreakfast"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Lunch: "
+            android:textSize="18sp"
+            android:textColor="@color/black"
+            android:layout_marginBottom="6dp"/>
+
+        <!-- Dinner Text -->
+        <TextView
+            android:id="@+id/txtDinner"
+            android:layout_below="@id/txtLunch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Dinner: "
+            android:textSize="18sp"
+            android:textColor="@color/black"
+            android:layout_marginBottom="12dp"/>
+
+        <!-- Image at Bottom Right -->
+        <ImageView
+            android:id="@+id/cardImage"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="16dp"
+            android:src="@drawable/card"
+            android:contentDescription="Card Image"/>
+
+    </RelativeLayout>
+</androidx.cardview.widget.CardView>

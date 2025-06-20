@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="@drawable/wallpaper"
+    tools:context=".MainActivity">
+
+    <!-- Header -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Plan Your Weekly Meal"
+        android:textSize="26sp"
+        android:layout_marginTop="32dp"
+        android:textColor="@color/black"
+        android:gravity="center"
+        android:padding="20dp"
+        android:textStyle="bold" />
+
+    <!-- Week Number Input -->
+    <EditText
+        android:id="@+id/week"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter Week No"
+        android:padding="14dp"
+        android:textColorHint="@color/black"
+        android:textColor="@color/black"
+        android:layout_marginTop="12dp"
+        android:background="@color/accentColor"
+        android:textSize="16sp" />
+
+    <!-- Day of Week Selection (Spinner) -->
+    <Spinner
+        android:id="@+id/day_spinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:textColor="@color/black"
+        android:padding="14dp"
+        android:background="#91AFE6"
+        android:minHeight="48dp"
+        android:textSize="16sp" />
+
+    <!-- Meal Inputs -->
+    <EditText
+        android:id="@+id/breakfast"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter Your Breakfast Dish"
+        android:padding="14dp"
+        android:layout_marginTop="12dp"
+        android:textColorHint="@color/black"
+        android:textColor="@color/black"
+        android:background="@color/accentColor"
+        android:textSize="16sp" />
+
+    <EditText
+        android:id="@+id/lunch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter Your Lunch Dish"
+        android:padding="14dp"
+        android:layout_marginTop="12dp"
+        android:textColorHint="#FBF7C7"
+        android:textColor="#FBF7C7"
+        android:background="#91AFE6"
+        android:textSize="16sp" />
+
+    <EditText
+        android:id="@+id/dinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter Your Dinner Dish"
+        android:padding="14dp"
+        android:layout_marginTop="12dp"
+        android:textColorHint="@color/black"
+        android:textColor="@color/black"
+        android:background="@color/accentColor"
+        android:textSize="16sp" />
+
+    <!-- Buttons -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingTop="24dp"
+        android:gravity="center">
+
+        <Button
+            android:id="@+id/submit_btn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Add"
+            android:backgroundTint="@color/primaryColor"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:padding="14dp"
+            android:background="@color/highlightColor" />
+
+        <Button
+            android:id="@+id/display_btn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Display"
+            android:backgroundTint="@color/accentColor"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:padding="14dp"
+            android:background="@color/highlightColor" />
+
+        <Button
+            android:id="@+id/edit_btn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Edit"
+            android:visibility="gone"
+            android:backgroundTint="@color/accentColor"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:padding="14dp"
+            android:background="@color/highlightColor" />
+    </LinearLayout>
+
+</LinearLayout>
