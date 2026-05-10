@@ -1,6 +1,7 @@
 package com.example.meal;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -35,6 +36,10 @@ public class LoginActivity extends AppCompatActivity {
             if (isLoginMode) {
                 // Login
                 if (db.checkUser(username, password)) {
+
+                    SharedPreferences pref = getSharedPreferences("MealPrefs", MODE_PRIVATE);
+                    pref.edit().putBoolean("isLoggedIn", true).apply();
+
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                     intent.putExtra("username", username);
                     startActivity(intent);

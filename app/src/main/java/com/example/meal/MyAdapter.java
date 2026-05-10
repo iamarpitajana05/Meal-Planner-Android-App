@@ -1,5 +1,6 @@
 package com.example.meal;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
@@ -37,7 +38,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ModelViewHolder>{
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MyAdapter.ModelViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull MyAdapter.ModelViewHolder holder, @SuppressLint("RecyclerView") int position) {
         final Model meal = mealList.get(position);
 
         // Set the data to the TextViews

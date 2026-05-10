@@ -1,6 +1,7 @@
 package com.example.meal;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.animation.AlphaAnimation;
@@ -33,9 +34,20 @@ public class SplashActivity extends AppCompatActivity {
         scaleAnimation.setDuration(2000);
         homeImage.startAnimation(scaleAnimation);
 
+//        new Handler().postDelayed(() -> {
+//            startActivity(new Intent(SplashActivity.this, LoginActivity.class));
+//            finish();
+//        }, 3000); // 3-second delay
         new Handler().postDelayed(() -> {
-            startActivity(new Intent(SplashActivity.this, LoginActivity.class));
+            SharedPreferences pref = getSharedPreferences("MealPrefs", MODE_PRIVATE);
+            boolean isLoggedIn = pref.getBoolean("isLoggedIn", false);
+
+            if (isLoggedIn) {
+                startActivity(new Intent(SplashActivity.this, MainActivity.class));
+            } else {
+                startActivity(new Intent(SplashActivity.this, LoginActivity.class));
+            }
             finish();
-        }, 3000); // 3-second delay
+        }, 3000);
     }
 }

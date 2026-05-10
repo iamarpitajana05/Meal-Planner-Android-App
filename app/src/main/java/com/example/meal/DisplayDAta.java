@@ -18,7 +18,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.Currency;
 
-public class DisplayDAta extends AppCompatActivity {
+//public class DisplayDAta extends AppCompatActivity {
+public class DisplayDAta extends BaseActivity {
     DBHelper dBmain;
     SQLiteDatabase sqLiteDatabase;
     RecyclerView recyclerView;

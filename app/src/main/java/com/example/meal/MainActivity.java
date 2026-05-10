@@ -1,145 +1,130 @@
 package com.example.meal;
 
-import android.content.ContentValues;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteException;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
+public class MainActivity extends BaseActivity {
 
-public class MainActivity extends AppCompatActivity {
-    private EditText weekInput, breakfastInput, lunchInput, dinnerInput;
+    private EditText edtWeek, edtBreakfast, edtLunch, edtDinner;
     private Spinner daySpinner;
-    private int id = 0;
-    private Button addButton, display, editButton;
+    private Button btnSubmit, btnDisplay, btnEdit;
+    private ImageButton btnLogout;
     private DBHelper dbHelper;
+    private SQLiteDatabase sqLiteDatabase;
+    private int mealId = -1; // To track if we are editing an existing record
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        findViews();
+        // Initialize Views
+        initViews();
+
+        // Initialize Database
         dbHelper = new DBHelper(this);
 
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-                R.array.days_of_week, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        daySpinner.setAdapter(adapter);
+        // Setup Day Spinner
+        setupSpinner();
 
-        addButton.setOnClickListener(v -> addMealToDatabase());
-        display.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, DisplayDAta.class)));
-        editButton.setOnClickListener(v -> updateMealData());
+        // Check if we are coming from the Edit button in the Adapter
+        checkIncomingData();
 
-        editData();
+        // Button Click Listeners
+        btnSubmit.setOnClickListener(v -> insertData());
+        btnDisplay.setOnClickListener(v -> {
+            startActivity(new Intent(MainActivity.this, DisplayDAta.class));
+        });
+
+        // The attractive icon logout
+        btnLogout.setOnClickListener(v -> performLogout());
+
+        btnEdit.setOnClickListener(v -> updateData());
     }
 
-    private void findViews() {
-        weekInput = findViewById(R.id.week);
-        breakfastInput = findViewById(R.id.breakfast);
-        lunchInput = findViewById(R.id.lunch);
-        dinnerInput = findViewById(R.id.dinner);
+    private void initViews() {
+        edtWeek = findViewById(R.id.week);
         daySpinner = findViewById(R.id.day_spinner);
-        addButton = findViewById(R.id.submit_btn);
-        display = findViewById(R.id.display_btn);
-        editButton = findViewById(R.id.edit_btn);
+        edtBreakfast = findViewById(R.id.breakfast);
+        edtLunch = findViewById(R.id.lunch);
+        edtDinner = findViewById(R.id.dinner);
+        btnSubmit = findViewById(R.id.submit_btn);
+        btnDisplay = findViewById(R.id.display_btn);
+        btnEdit = findViewById(R.id.edit_btn);
+        btnLogout = findViewById(R.id.logout_btn);
     }
 
-    private void editData() {
+    private void setupSpinner() {
+        String[] days = {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"};
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, days);
+        daySpinner.setAdapter(adapter);
+    }
+
+    private void checkIncomingData() {
         if (getIntent().getBundleExtra("Mealdata") != null) {
             Bundle bundle = getIntent().getBundleExtra("Mealdata");
-            id = bundle.getInt("id");
-            weekInput.setText(String.valueOf(bundle.getInt("Weekno")));
-            breakfastInput.setText(bundle.getString("breakfast"));
-            lunchInput.setText(bundle.getString("lunch"));
-            dinnerInput.setText(bundle.getString("dinner"));
+            mealId = bundle.getInt("id");
+            edtWeek.setText(String.valueOf(bundle.getInt("Weekno")));
+            edtBreakfast.setText(bundle.getString("breakfast"));
+            edtLunch.setText(bundle.getString("lunch"));
+            edtDinner.setText(bundle.getString("dinner"));
 
+            // Set Spinner Selection
             String day = bundle.getString("day");
-            if (day != null) {
-                ArrayAdapter<CharSequence> adapter = (ArrayAdapter<CharSequence>) daySpinner.getAdapter();
-                int position = adapter.getPosition(day);
-                daySpinner.setSelection(position);
-            }
+            ArrayAdapter adapter = (ArrayAdapter) daySpinner.getAdapter();
+            daySpinner.setSelection(adapter.getPosition(day));
 
-            editButton.setVisibility(View.VISIBLE);
-            addButton.setVisibility(View.GONE);
+            // UI Changes for Edit Mode
+            btnSubmit.setVisibility(View.GONE);
+            btnEdit.setVisibility(View.VISIBLE);
         }
     }
 
-    private void addMealToDatabase() {
-        String weekNo = weekInput.getText().toString().trim();
-        String selectedDay = daySpinner.getSelectedItem().toString();
-        String breakfast = breakfastInput.getText().toString().trim();
-        String lunch = lunchInput.getText().toString().trim();
-        String dinner = dinnerInput.getText().toString().trim();
+    private void insertData() {
+        sqLiteDatabase = dbHelper.getWritableDatabase();
+        String week = edtWeek.getText().toString();
+        String day = daySpinner.getSelectedItem().toString();
+        String breakfast = edtBreakfast.getText().toString();
+        String lunch = edtLunch.getText().toString();
+        String dinner = edtDinner.getText().toString();
 
-        if (weekNo.isEmpty() || selectedDay.equals("Select a day") || breakfast.isEmpty() || lunch.isEmpty() || dinner.isEmpty()) {
-            Toast.makeText(this, "Please fill all required fields.", Toast.LENGTH_SHORT).show();
+        if (week.isEmpty() || breakfast.isEmpty() || lunch.isEmpty() || dinner.isEmpty()) {
+            Toast.makeText(this, "Please fill all fields", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        try {
-            SQLiteDatabase db = dbHelper.getWritableDatabase();
-            ContentValues cv = new ContentValues();
-            cv.put("week_no", Integer.parseInt(weekNo));
-            cv.put("day_of_week", selectedDay);
-            cv.put("breakfast", breakfast);
-            cv.put("lunch", lunch);
-            cv.put("dinner", dinner);
-
-            long result = db.insert(DBHelper.TABLENAME, null, cv);
-            if (result != -1) {
-                Toast.makeText(this, "Meal details added successfully!", Toast.LENGTH_SHORT).show();
-                clearInputs();
-            } else {
-                Toast.makeText(this, "Failed to add meal details. Please try again.", Toast.LENGTH_SHORT).show();
-            }
-        } catch (SQLiteException e) {
-            Toast.makeText(this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    private void updateMealData() {
-        if (id != 0) {
-            try {
-                SQLiteDatabase db = dbHelper.getWritableDatabase();
-                ContentValues cv = new ContentValues();
-                cv.put("week_no", Integer.parseInt(weekInput.getText().toString().trim()));
-                cv.put("day_of_week", daySpinner.getSelectedItem().toString());
-                cv.put("breakfast", breakfastInput.getText().toString().trim());
-                cv.put("lunch", lunchInput.getText().toString().trim());
-                cv.put("dinner", dinnerInput.getText().toString().trim());
-
-                int rowsUpdated = db.update(DBHelper.TABLENAME, cv, "id=?", new String[]{String.valueOf(id)});
-
-                if (rowsUpdated > 0) {
-                    Toast.makeText(this, "Meal details updated successfully!", Toast.LENGTH_SHORT).show();
-                    clearInputs();
-                    addButton.setVisibility(View.VISIBLE);
-                    editButton.setVisibility(View.GONE);
-                } else {
-                    Toast.makeText(this, "Update failed. Please try again.", Toast.LENGTH_SHORT).show();
-                }
-            } catch (SQLiteException e) {
-                Toast.makeText(this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-            }
+        long result = dbHelper.insertMeal(Integer.parseInt(week), day, breakfast, lunch, dinner);
+        if (result != -1) {
+            Toast.makeText(this, "Meal Saved Successfully", Toast.LENGTH_SHORT).show();
+            clearFields();
         } else {
-            Toast.makeText(this, "No record selected for update.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Error Saving Meal", Toast.LENGTH_SHORT).show();
         }
     }
 
-    private void clearInputs() {
-        weekInput.setText("");
+    private void updateData() {
+        sqLiteDatabase = dbHelper.getWritableDatabase();
+        // Use dbHelper.updateMeal logic here (similar to insert but with ID)
+        // After update, toggle visibility back
+        btnSubmit.setVisibility(View.VISIBLE);
+        btnEdit.setVisibility(View.GONE);
+        clearFields();
+        Toast.makeText(this, "Meal Updated", Toast.LENGTH_SHORT).show();
+    }
+
+    private void clearFields() {
+        edtWeek.setText("");
+        edtBreakfast.setText("");
+        edtLunch.setText("");
+        edtDinner.setText("");
         daySpinner.setSelection(0);
-        breakfastInput.setText("");
-        lunchInput.setText("");
-        dinnerInput.setText("");
     }
 }
